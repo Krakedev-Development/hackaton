@@ -1,17 +1,35 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import GameLayout from './components/GameLayout'
 import MichiCatchGame from './components/MichiCatchGame'
 import { STAGES } from './constants/stages'
+import {
+  getCompletedStages,
+  getStageLockHint,
+  isStageUnlocked,
+  markStageCompleted,
+} from './hooks/stageProgress'
 
 export default function App() {
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null)
+  const [completedStages, setCompletedStages] = useState(() => getCompletedStages())
+
+  const handleStageComplete = useCallback((stageId: number) => {
+    setCompletedStages(markStageCompleted(stageId))
+  }, [])
 
   if (selectedStageId !== null) {
     const stage = STAGES.find((s) => s.id === selectedStageId)
-    if (!stage) return null
+    if (!stage || !isStageUnlocked(stage.id, completedStages)) {
+      setSelectedStageId(null)
+      return null
+    }
     return (
       <GameLayout>
-        <MichiCatchGame stage={stage} onExit={() => setSelectedStageId(null)} />
+        <MichiCatchGame
+          stage={stage}
+          onExit={() => setSelectedStageId(null)}
+          onStageComplete={handleStageComplete}
+        />
       </GameLayout>
     )
   }
@@ -32,28 +50,40 @@ export default function App() {
         </header>
 
         <ul className="flex flex-col gap-5 w-full">
-          {STAGES.map((stage) => (
-            <li key={stage.id}>
-              <button
-                type="button"
-                disabled={!stage.enabled}
-                onClick={() => stage.enabled && setSelectedStageId(stage.id)}
-                className={`w-full text-left p-5 border-5 border-black shadow-[6px_6px_0_#000] text-[10px] leading-loose rounded-xl transition-transform ${
-                  stage.enabled
-                    ? 'bg-[#ff3d9a] text-white hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0_#000] cursor-pointer'
-                    : 'bg-gray-600 text-gray-300 cursor-not-allowed opacity-70'
-                }`}
-              >
-                <span className="block text-[#ffe566] mb-2 text-[11px]">
-                  Nivel {stage.id}
-                </span>
-                {stage.title}
-                <span className="block mt-3 text-[9px] opacity-95">
-                  {stage.subtitle}
-                </span>
-              </button>
-            </li>
-          ))}
+          {STAGES.map((stage) => {
+            const unlocked = isStageUnlocked(stage.id, completedStages)
+            const completed = completedStages.includes(stage.id)
+            const lockHint = getStageLockHint(stage.id)
+
+            return (
+              <li key={stage.id}>
+                <button
+                  type="button"
+                  disabled={!unlocked}
+                  onClick={() => unlocked && setSelectedStageId(stage.id)}
+                  className={`w-full text-left p-5 border-5 border-black shadow-[6px_6px_0_#000] text-[10px] leading-loose rounded-xl transition-transform ${
+                    unlocked
+                      ? 'bg-[#ff3d9a] text-white hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0_#000] cursor-pointer'
+                      : 'bg-gray-600 text-gray-300 cursor-not-allowed opacity-70'
+                  }`}
+                >
+                  <span className="block text-[#ffe566] mb-2 text-[11px]">
+                    Nivel {stage.id}
+                    {completed && (
+                      <span className="text-[#39ff14] ml-2">!Listo!</span>
+                    )}
+                    {!unlocked && (
+                      <span className="text-[#ff9ecd] ml-2">Bloqueado</span>
+                    )}
+                  </span>
+                  {stage.title}
+                  <span className="block mt-3 text-[9px] opacity-95">
+                    {unlocked ? stage.subtitle : (lockHint ?? stage.subtitle)}
+                  </span>
+                </button>
+              </li>
+            )
+          })}
         </ul>
       </main>
     </GameLayout>

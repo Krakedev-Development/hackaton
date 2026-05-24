@@ -33,7 +33,7 @@ export const STAGES: StageConfig[] = [
     title: 'Ahorro Intermedio',
     subtitle: 'Metas, comparar precios y planear',
     ageRange: '10-13 anos',
-    enabled: true,
+    enabled: false,
     scoreGoal: SCORE_GOAL,
     decisionMilestones: [...DECISION_MILESTONES],
     objects: [
@@ -56,7 +56,7 @@ export const STAGES: StageConfig[] = [
     title: 'Inversion Avanzada',
     subtitle: 'Deuda, interes e invertir en ti',
     ageRange: '14+ anos',
-    enabled: true,
+    enabled: false,
     scoreGoal: SCORE_GOAL,
     decisionMilestones: [...DECISION_MILESTONES],
     objects: [

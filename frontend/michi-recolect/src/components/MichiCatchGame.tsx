@@ -57,6 +57,7 @@ import './MichiCatchGame.css'
 interface MichiCatchGameProps {
   stage: StageConfig
   onExit?: () => void
+  onStageComplete?: (stageId: number) => void
 }
 
 function applyPlayerTransform(el: HTMLDivElement | null, xPercent: number) {
@@ -71,7 +72,7 @@ const INITIAL_MODIFIERS: GameModifiers = {
   multiplierUntil: 0,
 }
 
-export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
+export default function MichiCatchGame({ stage, onExit, onStageComplete }: MichiCatchGameProps) {
   const [showBriefing, setShowBriefing] = useState(true)
   const [phase, setPhase] = useState<GamePhase>('frozen')
   const [lives, setLives] = useState(MAX_LIVES)
@@ -236,12 +237,13 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
       setSessionMilestones([...completedMilestonesRef.current])
       setEndLesson(pickEndLesson())
       setReflectionQuestion(pickReflectionQuestion())
+      onStageComplete?.(stage.id)
       setPhase('ended')
       return
     }
 
     setPhase('playing')
-  }, [stage])
+  }, [stage, onStageComplete])
 
   useEffect(() => {
     if (phase !== 'playing' && phase !== 'frozen') return
