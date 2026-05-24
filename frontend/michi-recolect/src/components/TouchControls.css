@@ -1,0 +1,45 @@
+.touch-controls {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 480px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.touch-controls__btn {
+  flex: 1;
+  min-height: 72px;
+  max-width: 200px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 22px;
+  color: #1a0033;
+  background: linear-gradient(180deg, #ffe566 0%, #ffc400 100%);
+  border: 5px solid #000;
+  box-shadow: 6px 6px 0 #000;
+  border-radius: 12px;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.touch-controls__btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 3px 3px 0 #000;
+  background: linear-gradient(180deg, #39ff14 0%, #22cc00 100%);
+}
+
+.touch-controls__btn--left {
+  color: #001a4d;
+}
+
+.touch-controls__btn--right {
+  color: #001a4d;
+}
+
+@media (min-width: 768px) {
+  .touch-controls {
+    display: none;
+  }
+}

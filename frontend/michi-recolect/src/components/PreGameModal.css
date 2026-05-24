@@ -1,0 +1,174 @@
+.pre-game {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(12, 0, 36, 0.92);
+  font-family: 'Press Start 2P', cursive;
+  overflow-y: auto;
+}
+
+.pre-game__panel {
+  width: 100%;
+  max-width: 520px;
+  max-height: 95vh;
+  overflow-y: auto;
+  padding: 22px 20px 26px;
+  background: linear-gradient(180deg, #2a1050 0%, #1a0a2e 100%);
+  border: 6px solid #000;
+  box-shadow: 10px 10px 0 #000;
+  border-radius: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pre-game__eyebrow {
+  font-size: 8px;
+  color: #3df5ff;
+  margin: 0 0 10px;
+  line-height: 1.8;
+}
+
+.pre-game__title {
+  font-size: 13px;
+  color: #ffe566;
+  text-shadow: 3px 3px 0 #ff3d9a;
+  margin: 0 0 8px;
+  line-height: 1.9;
+}
+
+.pre-game__subtitle {
+  font-size: 9px;
+  color: #ff9ecd;
+  margin: 0 0 18px;
+  line-height: 1.8;
+}
+
+.pre-game__guide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+  margin-bottom: 20px;
+  padding: 16px 14px;
+  border: 5px solid #000;
+  box-shadow: 5px 5px 0 #000;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #9edcff 0%, #5eb8e8 55%, #4a9fd4 100%);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.pre-game__guide-title {
+  font-size: 11px;
+  color: #1a0033;
+  margin: 0 0 16px;
+  text-align: center;
+  line-height: 1.8;
+  flex-shrink: 0;
+}
+
+.pre-game__guide-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pre-game__guide-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 10px;
+  background: rgba(255, 255, 255, 0.35);
+  border: 3px solid rgba(26, 0, 51, 0.25);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.pre-game__guide-num {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: #1a0033;
+  background: #ffe566;
+  border: 2px solid #1a0033;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 #1a0033;
+  line-height: 1;
+}
+
+.pre-game__guide-text {
+  flex: 1;
+  font-size: 7px;
+  color: #1a0033;
+  line-height: 1.9;
+  padding-top: 2px;
+}
+
+.pre-game__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.pre-game__btn {
+  width: 100%;
+  padding: 18px 12px;
+  font-family: inherit;
+  font-size: 10px;
+  line-height: 1.8;
+  border: 5px solid #000;
+  box-shadow: 6px 6px 0 #000;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.pre-game__btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: 3px 3px 0 #000;
+}
+
+.pre-game__btn--start {
+  background: #39ff14;
+  color: #003300;
+}
+
+.pre-game__btn--back {
+  background: #7ec8ff;
+  color: #001a33;
+}
+
+@media (max-height: 700px) {
+  .pre-game__guide {
+    min-height: 240px;
+    padding: 12px 10px;
+  }
+
+  .pre-game__guide-list {
+    gap: 6px;
+  }
+
+  .pre-game__guide-item {
+    padding: 8px;
+  }
+
+  .pre-game__guide-text {
+    font-size: 6px;
+    line-height: 1.75;
+  }
+}
