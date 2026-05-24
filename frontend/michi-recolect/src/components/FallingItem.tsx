@@ -1,16 +1,14 @@
-import { useRef } from 'react'
 import { ITEM_SPRITES } from '../constants/assets'
-import type { ObjectKind } from '../types/game'
+import { getToyVariant } from '../constants/toyVariants'
+import type { ObjectKind, ToyVariantId } from '../types/game'
 
 interface FallingItemProps {
   kind: ObjectKind
+  toyVariant?: ToyVariantId
 }
 
-export default function FallingItem({ kind }: FallingItemProps) {
+export default function FallingItem({ kind, toyVariant }: FallingItemProps) {
   const sprite = ITEM_SPRITES[kind]
-  const toyEmojiRef = useRef(
-    ['🧸', '🪀', '🚗', '⚽', '🧩'][Math.floor(Math.random() * 5)],
-  )
 
   if (sprite) {
     return (
@@ -32,9 +30,10 @@ export default function FallingItem({ kind }: FallingItemProps) {
   }
 
   if (kind === 'toy') {
+    const variant = getToyVariant(toyVariant ?? 'teddy')
     return (
-      <span className="michi-catch__object-emoji" title="Juguete">
-        {toyEmojiRef.current}
+      <span className="michi-catch__object-emoji" title={variant.title}>
+        {variant.emoji}
       </span>
     )
   }

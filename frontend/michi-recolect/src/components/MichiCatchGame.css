@@ -220,6 +220,26 @@
   background: linear-gradient(180deg, #ffd4ef 0%, #ff5cad 100%);
 }
 
+.michi-catch__object--toy-teddy {
+  background: linear-gradient(180deg, #ffd4ef 0%, #ff5cad 100%);
+}
+
+.michi-catch__object--toy-yoyo {
+  background: linear-gradient(180deg, #fff0b8 0%, #ff9a3d 100%);
+}
+
+.michi-catch__object--toy-ball {
+  background: linear-gradient(180deg, #e8ffe8 0%, #39ff14 100%);
+}
+
+.michi-catch__object--toy-puzzle {
+  background: linear-gradient(180deg, #e8d4ff 0%, #b44bff 100%);
+}
+
+.michi-catch__object--toy-car {
+  background: linear-gradient(180deg, #ffc4c4 0%, #ff3d3d 100%);
+}
+
 .michi-catch__object-emoji {
   font-size: 28px;
   line-height: 1;

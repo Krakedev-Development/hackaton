@@ -8,6 +8,8 @@ export type ObjectKind =
   | 'star'
   | 'info'
 
+export type ToyVariantId = 'teddy' | 'yoyo' | 'car' | 'ball' | 'puzzle'
+
 export type ItemEffect = 'points' | 'multiplier' | 'info'
 
 export type CrashChoice = 'need' | 'desire'
@@ -17,6 +19,7 @@ export interface FallingObject {
   kind: ObjectKind
   x: number
   y: number
+  toyVariant?: ToyVariantId
 }
 
 export interface SpawnableObject {

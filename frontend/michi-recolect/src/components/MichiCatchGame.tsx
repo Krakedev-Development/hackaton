@@ -316,7 +316,7 @@ export default function MichiCatchGame({
 
           if (boxesOverlap(playerXRef.current, moved)) {
             const result = resolveCatch(
-              moved.kind,
+              moved,
               stage,
               modifiersRef.current,
               now,
@@ -470,11 +470,15 @@ export default function MichiCatchGame({
         {objects.map((obj) => (
           <div
             key={obj.id}
-            className={`michi-catch__object michi-catch__object--${obj.kind}`}
+            className={`michi-catch__object michi-catch__object--${obj.kind}${
+              obj.kind === 'toy' && obj.toyVariant
+                ? ` michi-catch__object--toy-${obj.toyVariant}`
+                : ''
+            }`}
             style={{ left: `${obj.x}%`, top: `${obj.y}px` }}
             aria-hidden
           >
-            <FallingItem kind={obj.kind} />
+            <FallingItem kind={obj.kind} toyVariant={obj.toyVariant} />
           </div>
         ))}
 

@@ -1,3 +1,4 @@
+import { pickRandomToyVariant } from '../constants/toyVariants'
 import type { FallingObject, ObjectKind, SpawnableObject } from '../types/game'
 import {
   GAME_HEIGHT,
@@ -33,11 +34,13 @@ export function createFallingObject(
   const margin = 8
   const x =
     margin + Math.random() * (100 - margin * 2 - (OBJECT_SIZE / GAME_WIDTH) * 100)
+  const kind = pickRandomKind(pool, excludeKinds)
   return {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    kind: pickRandomKind(pool, excludeKinds),
+    kind,
     x,
     y: -OBJECT_SIZE,
+    toyVariant: kind === 'toy' ? pickRandomToyVariant() : undefined,
   }
 }
 

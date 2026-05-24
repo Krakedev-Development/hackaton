@@ -16,7 +16,7 @@ export const BRIEFING_ITEMS: string[] = [
   'Mueve a tu michi con flechas o los botones de abajo.',
   'Atrapa monedas y cofres: !son buenas elecciones!',
   'El circulo verde trae 5 consejos del curso (!atrapa los 5!).',
-  '!No atrapes el juguete! Pierdes un corazon.',
+  '!Cuidado con juguetes! Cada uno quita puntos o corazones distintos.',
   'Llega a 500 puntos. Cada 100 pts el juego va mas rapido.',
   'En 150, 300 y 500 haras una pregunta.',
 ]

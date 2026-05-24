@@ -2,6 +2,7 @@ import { pickRandomConsejo } from '../constants/consejos'
 import { CATCH_MESSAGES, type InfoTip } from '../constants/gameCopy'
 import type { DecisionScenario } from '../constants/decisionScenarios'
 import { pickRelatedConsejo } from '../constants/decisionScenarios'
+import { getToyVariant } from '../constants/toyVariants'
 import {
   MULTIPLIER_DURATION_MS,
   SCORE_MULTIPLIER_VALUE,
@@ -13,13 +14,41 @@ import type {
   StageConfig,
 } from '../types/game'
 
+function resolveToyCatch(
+  object: FallingObject,
+  modifiers: GameModifiers,
+  now: number,
+): CatchResult {
+  if (now < modifiers.shieldUntil) {
+    return {
+      scoreDelta: 0,
+      label: CATCH_MESSAGES.toyShield,
+      tone: 'celebrate',
+    }
+  }
+
+  const variant = getToyVariant(object.toyVariant ?? 'teddy')
+  const penalty = variant.pointsPenalty
+  const parts: string[] = []
+  if (penalty > 0) parts.push(`-${penalty} pts`)
+  if (variant.loseLife) parts.push('-1 corazon')
+
+  return {
+    scoreDelta: penalty > 0 ? -penalty : 0,
+    label: `!${variant.title}! ${parts.join(' y ')}`,
+    loseLife: variant.loseLife,
+    tone: 'careful',
+  }
+}
+
 export function resolveCatch(
-  kind: FallingObject['kind'],
+  object: FallingObject,
   stage: StageConfig,
   modifiers: GameModifiers,
   now: number,
   activeDecision?: DecisionScenario | null,
 ): CatchResult {
+  const { kind } = object
   const def = stage.objects.find((o) => o.kind === kind)
   if (!def) {
     return { scoreDelta: 0, label: '' }
@@ -53,22 +82,8 @@ export function resolveCatch(
     }
   }
 
-  if (kind === 'toy' && now < modifiers.shieldUntil) {
-    return {
-      scoreDelta: 0,
-      label: CATCH_MESSAGES.toyShield,
-      tone: 'celebrate',
-    }
-  }
-
   if (kind === 'toy') {
-    const penalty = Math.abs(def.points ?? 10)
-    return {
-      scoreDelta: -penalty,
-      label: `!Cuidado! -${penalty} pts y -1 corazon`,
-      loseLife: true,
-      tone: 'careful',
-    }
+    return resolveToyCatch(object, modifiers, now)
   }
 
   const basePoints = def.points ?? 0
@@ -85,9 +100,7 @@ export function resolveCatch(
   const label =
     mult > 1 && scoreDelta > 0
       ? `${baseLabel} (x${mult})`
-      : scoreDelta > 0
-        ? baseLabel
-        : baseLabel
+      : baseLabel
 
   return {
     scoreDelta,
