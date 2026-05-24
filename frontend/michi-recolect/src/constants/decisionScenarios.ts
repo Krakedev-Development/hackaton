@@ -125,8 +125,226 @@ export const STAGE_1_DECISIONS: DecisionScenario[] = [
   },
 ]
 
+export const STAGE_2_DECISIONS: DecisionScenario[] = [
+  {
+    id: 'bike-tablet',
+    title: '!Hora de elegir!',
+    question: 'Ahorraste mucho. Que compras?',
+    need: {
+      label: 'Reparar bicicleta (lo necesito)',
+      tip: '!Bien! Te mueves seguro',
+      feedback: '!Excelente! Cuidaste algo util',
+    },
+    desire: {
+      label: 'Tablet nueva (lo quiero)',
+      tip: 'Gastas todo de golpe',
+      feedback: 'La tablet puede esperar un poco',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Que es mas urgente: arreglar o comprar nuevo?' },
+      { kind: 'fact', text: 'Reparar suele costar menos que comprar otro.' },
+      { kind: 'question', text: 'Tienes meta de ahorro clara?' },
+      { kind: 'fact', text: 'Una meta te ayuda a no gastar de mas.' },
+    ],
+  },
+  {
+    id: 'trip-snacks',
+    title: '!Hora de elegir!',
+    question: 'Tienes monedas cada semana. Que haces?',
+    need: {
+      label: 'Guardar para un viaje',
+      tip: '!Bien! Piensas a futuro',
+      feedback: '!Genial! Ahorrar tiene meta',
+    },
+    desire: {
+      label: 'Snacks todos los dias',
+      tip: 'Se va rapido el dinero',
+      feedback: 'Gastar poco a poco tambien suma',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Prefieres viaje o golosinas diarias?' },
+      { kind: 'fact', text: 'Ahorrar con meta es mas facil.' },
+      { kind: 'question', text: 'Cuanto guardarias cada semana?' },
+      { kind: 'fact', text: 'Pequenas sumas hacen gran total.' },
+    ],
+  },
+  {
+    id: 'uniform-headphones',
+    title: '!Hora de elegir!',
+    question: 'Que es prioridad este mes?',
+    need: {
+      label: 'Uniforme escolar',
+      tip: '!Bien! Lo necesitas',
+      feedback: '!Muy bien! Escuela primero',
+    },
+    desire: {
+      label: 'Audifonos caros',
+      tip: 'Tu michi ira mas lento',
+      feedback: 'Los audifonos pueden esperar',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Que pasa si no tienes uniforme?' },
+      { kind: 'fact', text: 'Lo escolar es necesidad.' },
+      { kind: 'question', text: 'Compararias precios antes de comprar?' },
+      { kind: 'fact', text: 'Comparar precios ahorra monedas.' },
+    ],
+  },
+  {
+    id: 'bus-card-game',
+    title: '!Hora de elegir!',
+    question: 'Solo te alcanza para una cosa.',
+    need: {
+      label: 'Tarjeta de bus',
+      tip: '!Bien! Llegas a la escuela',
+      feedback: '!Que bien! Transporte es necesidad',
+    },
+    desire: {
+      label: 'Juego en linea',
+      tip: 'Gastas en deseo',
+      feedback: 'El juego puede esperar',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Como llegarias sin bus?' },
+      { kind: 'fact', text: 'Transporte es gasto fijo importante.' },
+      { kind: 'question', text: 'Que es gasto fijo y que es extra?' },
+      { kind: 'fact', text: 'Fijo = pagas siempre, extra = a veces.' },
+    ],
+  },
+  {
+    id: 'gift-friend-self',
+    title: '!Hora de elegir!',
+    question: 'Tienes pocas monedas. Que haces?',
+    need: {
+      label: 'Regalo simple para mama',
+      tip: '!Bien! Piensas en otros',
+      feedback: '!Lindo! Planificaste tu gasto',
+    },
+    desire: {
+      label: 'Ropa de moda para ti',
+      tip: 'Te quedas sin nada',
+      feedback: 'Planear evita quedarte sin monedas',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Puedes regalar sin gastar todo?' },
+      { kind: 'fact', text: 'Planear el gasto evita sorpresas.' },
+      { kind: 'question', text: 'Que regalo hecho en casa podrias dar?' },
+      { kind: 'fact', text: 'A veces lo hecho con carino vale mas.' },
+    ],
+  },
+]
+
+export const STAGE_3_DECISIONS: DecisionScenario[] = [
+  {
+    id: 'emergency-bag',
+    title: '!Hora de elegir!',
+    question: 'Tu primer sueldo. Que haces?',
+    need: {
+      label: 'Fondo de emergencia',
+      tip: '!Bien! Te proteges',
+      feedback: '!Excelente! Emergencias cubiertas',
+    },
+    desire: {
+      label: 'Bolso de lujo',
+      tip: 'Gastas todo rapido',
+      feedback: 'El lujo puede esperar',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Que es un fondo de emergencia?' },
+      { kind: 'fact', text: 'Es dinero guardado para imprevistos.' },
+      { kind: 'question', text: 'Cuanto guardarias al mes?' },
+      { kind: 'fact', text: 'Ahorrar primero ayuda en crisis.' },
+    ],
+  },
+  {
+    id: 'course-sneakers',
+    title: '!Hora de elegir!',
+    question: 'Inviertes en tu futuro?',
+    need: {
+      label: 'Curso que te enseña mas',
+      tip: '!Bien! Creces y aprendes',
+      feedback: '!Genial! Invertir en ti es clave',
+    },
+    desire: {
+      label: 'Tenis de marca',
+      tip: 'Gasto que baja de valor',
+      feedback: 'Moda pasa, habilidades quedan',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Que te da valor a largo plazo?' },
+      { kind: 'fact', text: 'Aprender puede darte mas ingresos.' },
+      { kind: 'question', text: 'Que es invertir en ti?' },
+      { kind: 'fact', text: 'Gastar en educacion es inversion.' },
+    ],
+  },
+  {
+    id: 'debt-gadget',
+    title: '!Hora de elegir!',
+    question: 'Debes dinero y quieres un gadget.',
+    need: {
+      label: 'Pagar deuda primero',
+      tip: '!Bien! Menos intereses',
+      feedback: '!Muy bien! Deuda baja primero',
+    },
+    desire: {
+      label: 'Gadget nuevo ya',
+      tip: 'La deuda crece',
+      feedback: 'Deuda cara puede esperar el gadget',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Que pasa si no pagas deuda?' },
+      { kind: 'fact', text: 'Deuda puede crecer con intereses.' },
+      { kind: 'question', text: 'Que es un interes?' },
+      { kind: 'fact', text: 'Interes = extra que pagas por pedir prestado.' },
+    ],
+  },
+  {
+    id: 'save-invest',
+    title: '!Hora de elegir!',
+    question: 'Tienes monedas extra al mes.',
+    need: {
+      label: 'Ahorrar e invertir poco a poco',
+      tip: '!Bien! Piensas largo plazo',
+      feedback: '!Excelente! Tu dinero puede crecer',
+    },
+    desire: {
+      label: 'Salidas caras cada fin de semana',
+      tip: 'No queda para invertir',
+      feedback: 'Diversion sin plan agota el ahorro',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Que es invertir?' },
+      { kind: 'fact', text: 'Invertir = poner dinero para que crezca.' },
+      { kind: 'question', text: 'Ahorro vs inversion: cual es la diferencia?' },
+      { kind: 'fact', text: 'Ahorro es guardar; inversion busca crecer.' },
+    ],
+  },
+  {
+    id: 'compare-buy',
+    title: '!Hora de elegir!',
+    question: 'Vas a comprar algo caro.',
+    need: {
+      label: 'Comparar precios y esperar',
+      tip: '!Bien! Compras inteligente',
+      feedback: '!Que bien! Investigaste antes',
+    },
+    desire: {
+      label: 'Comprar ya sin pensar',
+      tip: 'Pagas de mas',
+      feedback: 'Esperar un poco puede ahorrar mucho',
+    },
+    relatedTips: [
+      { kind: 'question', text: 'Revisarias 3 tiendas antes de comprar?' },
+      { kind: 'fact', text: 'Comparar evita pagar de mas.' },
+      { kind: 'question', text: 'Que es comprar impulsivo?' },
+      { kind: 'fact', text: 'Comprar sin pensar suele ser deseo.' },
+    ],
+  },
+]
+
 function getPool(stageId: number): DecisionScenario[] {
-  return stageId === 1 ? STAGE_1_DECISIONS : STAGE_1_DECISIONS
+  if (stageId === 2) return STAGE_2_DECISIONS
+  if (stageId === 3) return STAGE_3_DECISIONS
+  return STAGE_1_DECISIONS
 }
 
 export function pickRandomDecision(stageId: number): DecisionScenario {

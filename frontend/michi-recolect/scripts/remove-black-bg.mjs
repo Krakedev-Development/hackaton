@@ -12,8 +12,8 @@ const ITEM_ASSETS = [
   { path: 'src/assets/star.png', threshold: 48 },
   { path: 'src/assets/icon-info.png', threshold: 48 },
   { path: 'src/assets/michi-player.png', threshold: 40, resize: false },
-  { path: 'src/assets/michi-celebrating.png', threshold: 40, resize: false },
-  { path: 'src/assets/michi-saving.png', threshold: 40, resize: false },
+  { path: 'src/assets/michi-celebrating.png', threshold: 55, resize: false },
+  { path: 'src/assets/michi-saving.png', threshold: 55, resize: false },
 ]
 
 async function removeBlackBackground(relativePath, threshold = 48, resize = true) {

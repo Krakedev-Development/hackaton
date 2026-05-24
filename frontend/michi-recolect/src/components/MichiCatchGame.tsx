@@ -16,8 +16,10 @@ import type {
 } from '../types/game'
 import { GAME_BACKGROUND, MICHI_SPRITE } from '../constants/assets'
 import {
-  BASE_FALL_SPEED,
   GAME_HEIGHT,
+  getScorePressureMultiplier,
+  getSpawnInterval,
+  getStageTuning,
   MAX_LIVES,
   OBJECT_SIZE,
   PLAYER_ACCELERATION,
@@ -26,8 +28,6 @@ import {
   SHIELD_DURATION_MS,
   SLOW_DURATION_MS,
   SLOW_MULTIPLIER,
-  getScorePressureMultiplier,
-  getSpawnInterval,
 } from '../constants/gameConfig'
 import {
   checkScoreProgress,
@@ -42,8 +42,9 @@ import {
 import { resolveCatch } from '../hooks/resolveCatch'
 import {
   addUniqueTip,
-  ensureMinimumTips,
-  pairCollectedTips,
+  finalizeCollectedTips,
+  MAX_COLLECTED_TIPS,
+  MIN_COLLECTED_TIPS,
 } from '../hooks/collectedTips'
 import FallingItem from './FallingItem'
 import PixelHearts from './PixelHearts'
@@ -92,13 +93,13 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
   )
   const [showTipsReview, setShowTipsReview] = useState(false)
   const [showQuiz, setShowQuiz] = useState(false)
-  const [sessionTipPairs, setSessionTipPairs] = useState<
-    ReturnType<typeof pairCollectedTips>
-  >([])
+  const [sessionTips, setSessionTips] = useState<InfoTip[]>([])
   const [sessionMilestones, setSessionMilestones] = useState<MilestoneReview[]>(
     [],
   )
   const [collectedTipsCount, setCollectedTipsCount] = useState(0)
+
+  const stageTuning = getStageTuning(stage.id)
 
   const phaseRef = useRef(phase)
   const activeDecisionRef = useRef<DecisionScenario | null>(null)
@@ -164,7 +165,7 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
     activeMilestoneRef.current = 0
     setShowTipsReview(false)
     setShowQuiz(false)
-    setSessionTipPairs([])
+    setSessionTips([])
     setSessionMilestones([])
     setCollectedTipsCount(0)
     setActiveDecision(null)
@@ -230,8 +231,8 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
       )
     ) {
       const scenarios = completedMilestonesRef.current.map((m) => m.scenario)
-      const tips = ensureMinimumTips(collectedTipsRef.current, scenarios)
-      setSessionTipPairs(pairCollectedTips(tips))
+      const tips = finalizeCollectedTips(collectedTipsRef.current, scenarios)
+      setSessionTips(tips)
       setSessionMilestones([...completedMilestonesRef.current])
       setEndLesson(pickEndLesson())
       setReflectionQuestion(pickReflectionQuestion())
@@ -272,8 +273,8 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
         playerXRef.current = nextX
         applyPlayerTransform(playerElRef.current, nextX)
 
-        const pressure = getScorePressureMultiplier(scoreRef.current)
-        const spawnInterval = getSpawnInterval(scoreRef.current)
+        const pressure = getScorePressureMultiplier(scoreRef.current, stageTuning)
+        const spawnInterval = getSpawnInterval(scoreRef.current, stageTuning)
 
         if (now - lastSpawnRef.current >= spawnInterval) {
           lastSpawnRef.current = now
@@ -284,7 +285,7 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
           setObjects(objectsRef.current)
         }
 
-        const fallSpeed = BASE_FALL_SPEED * pressure * delta
+        const fallSpeed = stageTuning.baseFallSpeed * pressure * delta
         const remaining: FallingObject[] = []
         let scoreDelta = 0
         let catchLabel: string | null = null
@@ -332,11 +333,21 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
             }
 
             if (result.collectedTip) {
+              const before = collectedTipsRef.current.length
               collectedTipsRef.current = addUniqueTip(
                 collectedTipsRef.current,
                 result.collectedTip,
               )
-              setCollectedTipsCount(collectedTipsRef.current.length)
+              setCollectedTipsCount(
+                Math.min(collectedTipsRef.current.length, MAX_COLLECTED_TIPS),
+              )
+              if (
+                before < MAX_COLLECTED_TIPS &&
+                collectedTipsRef.current.length >= MAX_COLLECTED_TIPS
+              ) {
+                setLastCatch('!5 consejos listos!')
+                setCatchTone('learn')
+              }
             }
 
             setModifiers({ ...modifiersRef.current })
@@ -368,7 +379,7 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
 
     rafRef.current = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(rafRef.current)
-  }, [phase, stage, inputRef, applyScoreProgress])
+  }, [phase, stage, stageTuning, inputRef, applyScoreProgress])
 
   useEffect(() => {
     if (phase !== 'playing') return
@@ -432,7 +443,7 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
           )}
           {phase === 'playing' && (
             <span className="michi-catch__tips-tag">
-              Consejos {collectedTipsCount}/5
+              Consejos {collectedTipsCount}/{MIN_COLLECTED_TIPS}
             </span>
           )}
         </div>
@@ -604,7 +615,7 @@ export default function MichiCatchGame({ stage, onExit }: MichiCatchGameProps) {
 
       {showTipsReview && (
         <TipsReviewPanel
-          pairs={sessionTipPairs}
+          tips={sessionTips}
           milestones={sessionMilestones}
           onClose={() => setShowTipsReview(false)}
         />
