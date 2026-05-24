@@ -1,4 +1,4 @@
-import { pickRandomDecisionExcluding } from '../constants/decisionScenarios'
+import { pickDecisionForMilestone } from '../constants/decisionScenarios'
 import type { DecisionScenario } from '../constants/decisionScenarios'
 import type { StageConfig } from '../types/game'
 
@@ -20,7 +20,11 @@ export function checkScoreProgress(
   for (const milestone of sorted) {
     if (score >= milestone && !triggeredMilestones.has(milestone)) {
       triggeredMilestones.add(milestone)
-      const decision = pickRandomDecisionExcluding(stage.id, usedScenarioIds)
+      const decision = pickDecisionForMilestone(
+        stage.id,
+        milestone,
+        usedScenarioIds,
+      )
       usedScenarioIds.push(decision.id)
       const questionNumber = sorted.indexOf(milestone) + 1
       return { type: 'freeze', milestone, decision, questionNumber }

@@ -1,4 +1,5 @@
 import type { InfoTip } from './gameCopy'
+import { onlyConsejos, pickRandomConsejo } from './consejos'
 
 export interface DecisionScenario {
   id: string
@@ -21,7 +22,7 @@ export const STAGE_1_DECISIONS: DecisionScenario[] = [
   {
     id: 'tuna-toy',
     title: '!Hora de elegir!',
-    question: 'Que comprarias con tus monedas?',
+    question: 'Tema: necesidad o deseo. Que compras?',
     need: {
       label: 'Atun (lo necesito)',
       tip: '!Bien! Te protege de los juguetes',
@@ -33,9 +34,9 @@ export const STAGE_1_DECISIONS: DecisionScenario[] = [
       feedback: 'Elegiste un deseo... ve mas despacio',
     },
     relatedTips: [
-      { kind: 'question', text: 'Que necesitas hoy: comida o un juguete?' },
+      
       { kind: 'fact', text: 'La comida es una necesidad.' },
-      { kind: 'question', text: 'Que comprarias primero con pocas monedas?' },
+      
       { kind: 'fact', text: 'Un juguete puede esperar si aun no tienes comida.' },
     ],
   },
@@ -54,9 +55,9 @@ export const STAGE_1_DECISIONS: DecisionScenario[] = [
       feedback: 'Los dulces son deseo... !piensa antes!',
     },
     relatedTips: [
-      { kind: 'question', text: 'Que necesitas para la escuela?' },
+      
       { kind: 'fact', text: 'El cuaderno es una necesidad para estudiar.' },
-      { kind: 'question', text: 'Los dulces son necesidad o deseo?' },
+      
       { kind: 'fact', text: 'Si compras solo dulces, no te alcanza para utiles.' },
     ],
   },
@@ -75,16 +76,16 @@ export const STAGE_1_DECISIONS: DecisionScenario[] = [
       feedback: 'El juego puede esperar un poco',
     },
     relatedTips: [
-      { kind: 'question', text: 'Zapatos rotos o un juego nuevo?' },
+      
       { kind: 'fact', text: 'Ropa y zapatos son necesidades.' },
-      { kind: 'question', text: 'Puedes jugar sin zapatos comodos?' },
+      
       { kind: 'fact', text: 'Un videojuego es un deseo, no urgente.' },
     ],
   },
   {
     id: 'piggy-chicles',
     title: '!Hora de elegir!',
-    question: 'Que haces con tus monedas?',
+    question: 'Tema: ahorro. Que haces con tus monedas?',
     need: {
       label: 'Alcancia (ahorro)',
       tip: '!Bien! Guardas para despues',
@@ -96,9 +97,9 @@ export const STAGE_1_DECISIONS: DecisionScenario[] = [
       feedback: 'Gastar todo de golpe no ayuda',
     },
     relatedTips: [
-      { kind: 'question', text: 'Guardarias monedas en una alcancia?' },
+      
       { kind: 'fact', text: 'Ahorrar es guardar para algo importante.' },
-      { kind: 'question', text: 'Chicles o monedas para despues?' },
+      
       { kind: 'fact', text: 'Si gastas todo hoy, manana no tienes.' },
     ],
   },
@@ -117,9 +118,9 @@ export const STAGE_1_DECISIONS: DecisionScenario[] = [
       feedback: 'El peluche puede esperar',
     },
     relatedTips: [
-      { kind: 'question', text: 'Salud o un juguete nuevo?' },
+      
       { kind: 'fact', text: 'Medicina y salud son necesidades.' },
-      { kind: 'question', text: 'Que pasa si gastas en cosas que no necesitas?' },
+      
       { kind: 'fact', text: 'Un peluche bonito es un deseo.' },
     ],
   },
@@ -141,9 +142,9 @@ export const STAGE_2_DECISIONS: DecisionScenario[] = [
       feedback: 'La tablet puede esperar un poco',
     },
     relatedTips: [
-      { kind: 'question', text: 'Que es mas urgente: arreglar o comprar nuevo?' },
+      
       { kind: 'fact', text: 'Reparar suele costar menos que comprar otro.' },
-      { kind: 'question', text: 'Tienes meta de ahorro clara?' },
+      
       { kind: 'fact', text: 'Una meta te ayuda a no gastar de mas.' },
     ],
   },
@@ -162,9 +163,9 @@ export const STAGE_2_DECISIONS: DecisionScenario[] = [
       feedback: 'Gastar poco a poco tambien suma',
     },
     relatedTips: [
-      { kind: 'question', text: 'Prefieres viaje o golosinas diarias?' },
+      
       { kind: 'fact', text: 'Ahorrar con meta es mas facil.' },
-      { kind: 'question', text: 'Cuanto guardarias cada semana?' },
+      
       { kind: 'fact', text: 'Pequenas sumas hacen gran total.' },
     ],
   },
@@ -183,9 +184,9 @@ export const STAGE_2_DECISIONS: DecisionScenario[] = [
       feedback: 'Los audifonos pueden esperar',
     },
     relatedTips: [
-      { kind: 'question', text: 'Que pasa si no tienes uniforme?' },
+      
       { kind: 'fact', text: 'Lo escolar es necesidad.' },
-      { kind: 'question', text: 'Compararias precios antes de comprar?' },
+      
       { kind: 'fact', text: 'Comparar precios ahorra monedas.' },
     ],
   },
@@ -204,9 +205,9 @@ export const STAGE_2_DECISIONS: DecisionScenario[] = [
       feedback: 'El juego puede esperar',
     },
     relatedTips: [
-      { kind: 'question', text: 'Como llegarias sin bus?' },
+      
       { kind: 'fact', text: 'Transporte es gasto fijo importante.' },
-      { kind: 'question', text: 'Que es gasto fijo y que es extra?' },
+      
       { kind: 'fact', text: 'Fijo = pagas siempre, extra = a veces.' },
     ],
   },
@@ -225,9 +226,9 @@ export const STAGE_2_DECISIONS: DecisionScenario[] = [
       feedback: 'Planear evita quedarte sin monedas',
     },
     relatedTips: [
-      { kind: 'question', text: 'Puedes regalar sin gastar todo?' },
+      
       { kind: 'fact', text: 'Planear el gasto evita sorpresas.' },
-      { kind: 'question', text: 'Que regalo hecho en casa podrias dar?' },
+      
       { kind: 'fact', text: 'A veces lo hecho con carino vale mas.' },
     ],
   },
@@ -249,9 +250,9 @@ export const STAGE_3_DECISIONS: DecisionScenario[] = [
       feedback: 'El lujo puede esperar',
     },
     relatedTips: [
-      { kind: 'question', text: 'Que es un fondo de emergencia?' },
+      
       { kind: 'fact', text: 'Es dinero guardado para imprevistos.' },
-      { kind: 'question', text: 'Cuanto guardarias al mes?' },
+      
       { kind: 'fact', text: 'Ahorrar primero ayuda en crisis.' },
     ],
   },
@@ -270,9 +271,9 @@ export const STAGE_3_DECISIONS: DecisionScenario[] = [
       feedback: 'Moda pasa, habilidades quedan',
     },
     relatedTips: [
-      { kind: 'question', text: 'Que te da valor a largo plazo?' },
+      
       { kind: 'fact', text: 'Aprender puede darte mas ingresos.' },
-      { kind: 'question', text: 'Que es invertir en ti?' },
+      
       { kind: 'fact', text: 'Gastar en educacion es inversion.' },
     ],
   },
@@ -291,9 +292,9 @@ export const STAGE_3_DECISIONS: DecisionScenario[] = [
       feedback: 'Deuda cara puede esperar el gadget',
     },
     relatedTips: [
-      { kind: 'question', text: 'Que pasa si no pagas deuda?' },
+      
       { kind: 'fact', text: 'Deuda puede crecer con intereses.' },
-      { kind: 'question', text: 'Que es un interes?' },
+      
       { kind: 'fact', text: 'Interes = extra que pagas por pedir prestado.' },
     ],
   },
@@ -312,9 +313,9 @@ export const STAGE_3_DECISIONS: DecisionScenario[] = [
       feedback: 'Diversion sin plan agota el ahorro',
     },
     relatedTips: [
-      { kind: 'question', text: 'Que es invertir?' },
+      
       { kind: 'fact', text: 'Invertir = poner dinero para que crezca.' },
-      { kind: 'question', text: 'Ahorro vs inversion: cual es la diferencia?' },
+      
       { kind: 'fact', text: 'Ahorro es guardar; inversion busca crecer.' },
     ],
   },
@@ -333,9 +334,9 @@ export const STAGE_3_DECISIONS: DecisionScenario[] = [
       feedback: 'Esperar un poco puede ahorrar mucho',
     },
     relatedTips: [
-      { kind: 'question', text: 'Revisarias 3 tiendas antes de comprar?' },
+      
       { kind: 'fact', text: 'Comparar evita pagar de mas.' },
-      { kind: 'question', text: 'Que es comprar impulsivo?' },
+      
       { kind: 'fact', text: 'Comprar sin pensar suele ser deseo.' },
     ],
   },
@@ -361,7 +362,52 @@ export function pickRandomDecisionExcluding(
   return pool[Math.floor(Math.random() * pool.length)] ?? pool[0]
 }
 
+/** Escenarios por hito (temas MINEDUC: necesidad-deseo, ahorro, decision informada) */
+const MILESTONE_SCENARIO_IDS: Record<number, Record<number, string[]>> = {
+  1: {
+    150: ['tuna-toy', 'notebook-candy', 'medicine-plush'],
+    300: ['piggy-chicles', 'shoes-game'],
+    500: ['piggy-chicles', 'notebook-candy', 'tuna-toy'],
+  },
+  2: {
+    150: ['uniform-headphones', 'bus-card-game'],
+    300: ['trip-snacks', 'bike-tablet'],
+    500: ['gift-friend-self', 'trip-snacks'],
+  },
+  3: {
+    150: ['emergency-bag', 'debt-gadget'],
+    300: ['save-invest', 'course-sneakers'],
+    500: ['compare-buy', 'debt-gadget'],
+  },
+}
+
+export function pickDecisionForMilestone(
+  stageId: number,
+  milestone: number,
+  excludeIds: string[],
+): DecisionScenario {
+  const ids = MILESTONE_SCENARIO_IDS[stageId]?.[milestone]
+  const pool = getPool(stageId).filter(
+    (s) => ids?.includes(s.id) && !excludeIds.includes(s.id),
+  )
+  if (pool.length > 0) {
+    return pool[Math.floor(Math.random() * pool.length)] ?? pool[0]
+  }
+  return pickRandomDecisionExcluding(stageId, excludeIds)
+}
+
+export function pickRelatedConsejo(
+  scenario: DecisionScenario,
+  stageId: number,
+): InfoTip {
+  const facts = onlyConsejos(scenario.relatedTips)
+  if (facts.length > 0) {
+    return facts[Math.floor(Math.random() * facts.length)] ?? facts[0]
+  }
+  return pickRandomConsejo(stageId)
+}
+
+/** @deprecated */
 export function pickRelatedInfoTip(scenario: DecisionScenario): InfoTip {
-  const tips = scenario.relatedTips
-  return tips[Math.floor(Math.random() * tips.length)] ?? tips[0]
+  return pickRelatedConsejo(scenario, 1)
 }

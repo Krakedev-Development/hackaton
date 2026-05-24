@@ -1,4 +1,5 @@
-import { INFO_TIPS, type InfoTip } from '../constants/gameCopy'
+import { getConsejosPool, onlyConsejos } from '../constants/consejos'
+import type { InfoTip } from '../constants/gameCopy'
 import type { DecisionScenario } from '../constants/decisionScenarios'
 
 export const MIN_COLLECTED_TIPS = 5
@@ -6,19 +7,21 @@ export const MAX_COLLECTED_TIPS = 5
 
 export function addUniqueTip(tips: InfoTip[], tip: InfoTip): InfoTip[] {
   if (tips.length >= MAX_COLLECTED_TIPS) return tips
+  if (tip.kind !== 'fact') return tips
   if (tips.some((t) => t.text === tip.text)) return tips
   return [...tips, tip]
 }
 
-/** Exactamente 5 consejos para el panel final */
+/** Exactamente 5 consejos (solo datos, sin preguntas) */
 export function finalizeCollectedTips(
   collected: InfoTip[],
   scenarios: DecisionScenario[],
+  stageId: number,
 ): InfoTip[] {
-  const result = [...collected]
+  const result = [...onlyConsejos(collected)]
   const pool = [
-    ...scenarios.flatMap((s) => s.relatedTips),
-    ...INFO_TIPS,
+    ...scenarios.flatMap((s) => onlyConsejos(s.relatedTips)),
+    ...getConsejosPool(stageId),
   ]
 
   for (const tip of pool) {
@@ -86,6 +89,7 @@ export function pairCollectedTips(tips: InfoTip[]): TipPair[] {
 export function ensureMinimumTips(
   collected: InfoTip[],
   scenarios: DecisionScenario[],
+  stageId = 1,
 ): InfoTip[] {
-  return finalizeCollectedTips(collected, scenarios)
+  return finalizeCollectedTips(collected, scenarios, stageId)
 }

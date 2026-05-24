@@ -4,10 +4,10 @@ export const PLAYER_WIDTH = 104
 export const PLAYER_HEIGHT = 128
 export const PLAYER_BOTTOM = 20
 export const OBJECT_SIZE = 56
-export const PLAYER_ACCELERATION = 0.00135
-export const PLAYER_MAX_SPEED = 0.62
+export const PLAYER_ACCELERATION = 0.00155
+export const PLAYER_MAX_SPEED = 0.68
 export const PLAYER_FRICTION = 0.86
-export const SHIELD_DURATION_MS = 20000
+export const SHIELD_DURATION_MS = 30000
 export const SLOW_DURATION_MS = 10000
 export const SLOW_MULTIPLIER = 0.72
 export const SCORE_MULTIPLIER_VALUE = 2
@@ -16,6 +16,12 @@ export const MAX_LIVES = 3
 
 export const SCORE_GOAL = 500
 export const DECISION_MILESTONES = [150, 300, 500] as const
+
+/** Maximo de fichas verdes (info) que caen por partida */
+export const MAX_INFO_SPAWNS_PER_GAME = 5
+
+/** Maximo de estrellas por partida */
+export const MAX_STAR_SPAWNS_PER_GAME = 2
 
 export interface StageTuning {
   baseFallSpeed: number
@@ -28,32 +34,31 @@ export interface StageTuning {
 
 export const STAGE_TUNINGS: Record<number, StageTuning> = {
   1: {
-    baseFallSpeed: 0.17,
-    spawnIntervalMs: 1000,
-    minSpawnIntervalMs: 480,
-    speedTierEvery: 100,
-    speedBonusPerTier: 0.28,
-    maxFallSpeedMultiplier: 2.5,
+    baseFallSpeed: 0.22,
+    spawnIntervalMs: 750,
+    minSpawnIntervalMs: 360,
+    speedTierEvery: 90,
+    speedBonusPerTier: 0.34,
+    maxFallSpeedMultiplier: 3.1,
   },
   2: {
-    baseFallSpeed: 0.22,
-    spawnIntervalMs: 820,
-    minSpawnIntervalMs: 380,
-    speedTierEvery: 80,
-    speedBonusPerTier: 0.34,
-    maxFallSpeedMultiplier: 2.9,
+    baseFallSpeed: 0.27,
+    spawnIntervalMs: 620,
+    minSpawnIntervalMs: 290,
+    speedTierEvery: 75,
+    speedBonusPerTier: 0.4,
+    maxFallSpeedMultiplier: 3.5,
   },
   3: {
-    baseFallSpeed: 0.28,
-    spawnIntervalMs: 680,
-    minSpawnIntervalMs: 300,
-    speedTierEvery: 60,
-    speedBonusPerTier: 0.4,
-    maxFallSpeedMultiplier: 3.4,
+    baseFallSpeed: 0.33,
+    spawnIntervalMs: 520,
+    minSpawnIntervalMs: 230,
+    speedTierEvery: 55,
+    speedBonusPerTier: 0.46,
+    maxFallSpeedMultiplier: 3.9,
   },
 }
 
-/** Valores por defecto nivel 1 (compat) */
 export const BASE_FALL_SPEED = STAGE_TUNINGS[1].baseFallSpeed
 export const SPAWN_INTERVAL_MS = STAGE_TUNINGS[1].spawnIntervalMs
 export const MAX_FALL_SPEED_MULTIPLIER = STAGE_TUNINGS[1].maxFallSpeedMultiplier

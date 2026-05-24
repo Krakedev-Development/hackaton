@@ -1,31 +1,29 @@
 /** Textos del juego - ninos 6-9 anos. Frases cortas. Sin acentos (fuente pixel). */
 
-export const BRIEFING_TITLE = '!Aprende jugando con tu michi!'
-
-export const BRIEFING_ITEMS: string[] = [
-  'Mueve a tu michi con flechas o los botones de abajo.',
-  'Atrapa monedas y cofres: !son buenas elecciones!',
-  'El circulo verde guarda consejos (!atrapa al menos 5!).',
-  '!No atrapes el juguete! Pierdes un corazon.',
-  'Llega a 500 puntos. Cada 100 pts el juego va mas rapido.',
-  'En 150, 300 y 500 haras una pregunta.',
-]
+import {
+  CONSEJOS_STAGE_1,
+  pickRandomConsejo,
+} from './consejos'
 
 export type InfoTip = {
   kind: 'fact' | 'question'
   text: string
 }
 
-export const INFO_TIPS: InfoTip[] = [
-  { kind: 'fact', text: 'Ahorrar es guardar monedas para despues.' },
-  { kind: 'question', text: 'Que necesitas hoy: comida o un juguete?' },
-  { kind: 'fact', text: 'Necesidad = algo importante para vivir bien.' },
-  { kind: 'question', text: 'Tienes alcancia en casa?' },
-  { kind: 'fact', text: 'Deseo = algo que quieres, pero puedes esperar.' },
-  { kind: 'question', text: 'Que guardarias en tu alcancia?' },
-  { kind: 'fact', text: 'Si gastas todo, no te alcanza para lo importante.' },
-  { kind: 'question', text: 'Quien te ayuda a decidir que comprar?' },
+export const BRIEFING_TITLE = '!Aprende jugando con tu michi!'
+
+export const BRIEFING_ITEMS: string[] = [
+  'Mueve a tu michi con flechas o los botones de abajo.',
+  'Atrapa monedas y cofres: !son buenas elecciones!',
+  'El circulo verde trae 5 consejos del curso (!atrapa los 5!).',
+  '!No atrapes el juguete! Pierdes un corazon.',
+  'Llega a 500 puntos. Cada 100 pts el juego va mas rapido.',
+  'En 150, 300 y 500 haras una pregunta.',
 ]
+
+export const INFO_TIPS = CONSEJOS_STAGE_1
+
+export { CONSEJOS_STAGE_1, CONSEJOS_STAGE_2, CONSEJOS_STAGE_3, getConsejosPool, pickRandomConsejo } from './consejos'
 
 export const END_LESSONS: string[] = [
   'Hoy aprendiste: a veces conviene elegir lo que necesitas antes que lo que quieres.',
@@ -48,15 +46,15 @@ export const CATCH_MESSAGES = {
   coin: '!Bien! Monedas para ahorrar',
   chest: '!Bien pensado! Cofre de ahorro',
   star: '!Genial! Doble puntos',
-  info: '!Buena pregunta!',
+  info: '!Buen consejo!',
   toy: '!Cuidado! Era un deseo',
   toyShield: '!Que bien! Tu escudo te cuido',
   needChoice: '!Excelente! Elegiste una necesidad',
   desireChoice: 'Elegiste un deseo... ve mas despacio',
 } as const
 
-export function pickRandomInfoTip(pool: InfoTip[] = INFO_TIPS): InfoTip {
-  return pool[Math.floor(Math.random() * pool.length)] ?? pool[0]
+export function pickRandomInfoTip(stageId = 1): InfoTip {
+  return pickRandomConsejo(stageId)
 }
 
 export function pickEndLesson(): string {

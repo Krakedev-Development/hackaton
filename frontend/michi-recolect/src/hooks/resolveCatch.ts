@@ -1,10 +1,7 @@
-import {
-  CATCH_MESSAGES,
-  pickRandomInfoTip,
-  type InfoTip,
-} from '../constants/gameCopy'
-import { pickRelatedInfoTip } from '../constants/decisionScenarios'
+import { pickRandomConsejo } from '../constants/consejos'
+import { CATCH_MESSAGES, type InfoTip } from '../constants/gameCopy'
 import type { DecisionScenario } from '../constants/decisionScenarios'
+import { pickRelatedConsejo } from '../constants/decisionScenarios'
 import {
   MULTIPLIER_DURATION_MS,
   SCORE_MULTIPLIER_VALUE,
@@ -31,14 +28,14 @@ export function resolveCatch(
   if (def.effect === 'info') {
     const tip: InfoTip = activeDecision
       ? Math.random() < 0.75
-        ? pickRelatedInfoTip(activeDecision)
-        : pickRandomInfoTip()
-      : pickRandomInfoTip()
+        ? pickRelatedConsejo(activeDecision, stage.id)
+        : pickRandomConsejo(stage.id)
+      : pickRandomConsejo(stage.id)
     return {
       scoreDelta: 0,
       label: CATCH_MESSAGES.info,
       infoMessage: tip.text,
-      infoIsQuestion: tip.kind === 'question',
+      infoIsQuestion: false,
       collectedTip: tip,
       tone: 'learn',
     }

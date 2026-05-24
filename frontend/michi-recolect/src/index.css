@@ -17,3 +17,10 @@
     font-family: 'Press Start 2P', cursive;
   }
 }
+
+@layer utilities {
+  .font-readable {
+    font-family: 'VT323', monospace;
+    letter-spacing: 0.02em;
+  }
+}

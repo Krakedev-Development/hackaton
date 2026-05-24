@@ -12,6 +12,7 @@ import type {
   FeedbackTone,
   GameModifiers,
   GamePhase,
+  ObjectKind,
   StageConfig,
 } from '../types/game'
 import { GAME_BACKGROUND, MICHI_SPRITE } from '../constants/assets'
@@ -20,6 +21,8 @@ import {
   getScorePressureMultiplier,
   getSpawnInterval,
   getStageTuning,
+  MAX_INFO_SPAWNS_PER_GAME,
+  MAX_STAR_SPAWNS_PER_GAME,
   MAX_LIVES,
   OBJECT_SIZE,
   PLAYER_ACCELERATION,
@@ -57,7 +60,8 @@ import './MichiCatchGame.css'
 interface MichiCatchGameProps {
   stage: StageConfig
   onExit?: () => void
-  onStageComplete?: (stageId: number) => void
+  onStageBeaten?: (stageId: number) => void
+  onQuizPassed?: (stageId: number, score: number) => void
 }
 
 function applyPlayerTransform(el: HTMLDivElement | null, xPercent: number) {
@@ -72,7 +76,12 @@ const INITIAL_MODIFIERS: GameModifiers = {
   multiplierUntil: 0,
 }
 
-export default function MichiCatchGame({ stage, onExit, onStageComplete }: MichiCatchGameProps) {
+export default function MichiCatchGame({
+  stage,
+  onExit,
+  onStageBeaten,
+  onQuizPassed,
+}: MichiCatchGameProps) {
   const [showBriefing, setShowBriefing] = useState(true)
   const [phase, setPhase] = useState<GamePhase>('frozen')
   const [lives, setLives] = useState(MAX_LIVES)
@@ -82,10 +91,8 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
   const [modifiers, setModifiers] = useState<GameModifiers>(INITIAL_MODIFIERS)
   const [clock, setClock] = useState(() => performance.now())
   const [questionNumber, setQuestionNumber] = useState(1)
-  const [lastCatch, setLastCatch] = useState<string | null>(null)
-  const [catchTone, setCatchTone] = useState<FeedbackTone>('neutral')
+  const [, setCatchTone] = useState<FeedbackTone>('neutral')
   const [infoMessage, setInfoMessage] = useState<string | null>(null)
-  const [infoIsQuestion, setInfoIsQuestion] = useState(false)
   const [endLesson, setEndLesson] = useState('')
   const [reflectionQuestion, setReflectionQuestion] = useState('')
   const [playerCelebrate, setPlayerCelebrate] = useState(false)
@@ -115,11 +122,12 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
   const collectedTipsRef = useRef<InfoTip[]>([])
   const completedMilestonesRef = useRef<MilestoneReview[]>([])
   const activeMilestoneRef = useRef(0)
+  const infoSpawnedRef = useRef(0)
+  const starSpawnedRef = useRef(0)
   const livesRef = useRef(MAX_LIVES)
   const lastSpawnRef = useRef(0)
   const rafRef = useRef(0)
   const lastFrameRef = useRef(0)
-  const catchFlashRef = useRef(0)
   const infoTimeoutRef = useRef(0)
 
   const { inputRef, setLeft, setRight } = useMovementInput(phase === 'playing')
@@ -163,6 +171,8 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
     usedScenarioIdsRef.current = []
     collectedTipsRef.current = []
     completedMilestonesRef.current = []
+    infoSpawnedRef.current = 0
+    starSpawnedRef.current = 0
     activeMilestoneRef.current = 0
     setShowTipsReview(false)
     setShowQuiz(false)
@@ -179,10 +189,8 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
     setObjects([])
     setModifiers({ ...INITIAL_MODIFIERS })
     modifiersRef.current = { ...INITIAL_MODIFIERS }
-    setLastCatch(null)
     setCatchTone('neutral')
     setInfoMessage(null)
-    setInfoIsQuestion(false)
     setPlayerCelebrate(false)
     setPhase('playing')
     lastSpawnRef.current = 0
@@ -218,11 +226,7 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
       choice,
     })
 
-    setLastCatch(
-      choice === 'need' ? decision.need.feedback : decision.desire.feedback,
-    )
     setCatchTone(choice === 'need' ? 'celebrate' : 'careful')
-    catchFlashRef.current = performance.now()
 
     if (
       shouldWinAfterDecision(
@@ -232,18 +236,22 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
       )
     ) {
       const scenarios = completedMilestonesRef.current.map((m) => m.scenario)
-      const tips = finalizeCollectedTips(collectedTipsRef.current, scenarios)
+      const tips = finalizeCollectedTips(
+        collectedTipsRef.current,
+        scenarios,
+        stage.id,
+      )
       setSessionTips(tips)
       setSessionMilestones([...completedMilestonesRef.current])
       setEndLesson(pickEndLesson())
       setReflectionQuestion(pickReflectionQuestion())
-      onStageComplete?.(stage.id)
+      onStageBeaten?.(stage.id)
       setPhase('ended')
       return
     }
 
     setPhase('playing')
-  }, [stage, onStageComplete])
+  }, [stage, onStageBeaten])
 
   useEffect(() => {
     if (phase !== 'playing' && phase !== 'frozen') return
@@ -280,17 +288,27 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
 
         if (now - lastSpawnRef.current >= spawnInterval) {
           lastSpawnRef.current = now
-          objectsRef.current = [
-            ...objectsRef.current,
-            createFallingObject(stage.objects),
-          ]
+          const excludeKinds: ObjectKind[] = []
+          if (infoSpawnedRef.current >= MAX_INFO_SPAWNS_PER_GAME) {
+            excludeKinds.push('info')
+          }
+          if (starSpawnedRef.current >= MAX_STAR_SPAWNS_PER_GAME) {
+            excludeKinds.push('star')
+          }
+          const spawned = createFallingObject(stage.objects, excludeKinds)
+          if (spawned.kind === 'info') {
+            infoSpawnedRef.current += 1
+          }
+          if (spawned.kind === 'star') {
+            starSpawnedRef.current += 1
+          }
+          objectsRef.current = [...objectsRef.current, spawned]
           setObjects(objectsRef.current)
         }
 
         const fallSpeed = stageTuning.baseFallSpeed * pressure * delta
         const remaining: FallingObject[] = []
         let scoreDelta = 0
-        let catchLabel: string | null = null
 
         for (const obj of objectsRef.current) {
           const nextY = obj.y + fallSpeed
@@ -305,7 +323,6 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
               activeDecisionRef.current,
             )
             scoreDelta += result.scoreDelta
-            catchLabel = result.label
             setCatchTone(result.tone ?? 'neutral')
 
             if (result.tone === 'celebrate') {
@@ -326,16 +343,13 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
 
             if (result.infoMessage) {
               setInfoMessage(result.infoMessage)
-              setInfoIsQuestion(result.infoIsQuestion ?? false)
               window.clearTimeout(infoTimeoutRef.current)
               infoTimeoutRef.current = window.setTimeout(() => {
                 setInfoMessage(null)
-                setInfoIsQuestion(false)
               }, 5000)
             }
 
             if (result.collectedTip) {
-              const before = collectedTipsRef.current.length
               collectedTipsRef.current = addUniqueTip(
                 collectedTipsRef.current,
                 result.collectedTip,
@@ -343,13 +357,6 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
               setCollectedTipsCount(
                 Math.min(collectedTipsRef.current.length, MAX_COLLECTED_TIPS),
               )
-              if (
-                before < MAX_COLLECTED_TIPS &&
-                collectedTipsRef.current.length >= MAX_COLLECTED_TIPS
-              ) {
-                setLastCatch('!5 consejos listos!')
-                setCatchTone('learn')
-              }
             }
 
             setModifiers({ ...modifiersRef.current })
@@ -365,11 +372,6 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
           scoreRef.current = Math.max(0, scoreRef.current + scoreDelta)
           setScore(scoreRef.current)
           applyScoreProgress(scoreRef.current)
-        }
-
-        if (catchLabel) {
-          setLastCatch(catchLabel)
-          catchFlashRef.current = now
         }
 
         objectsRef.current = remaining
@@ -395,10 +397,6 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
     if (phase !== 'playing' && phase !== 'frozen' && phase !== 'ended') return
     const clockInterval = window.setInterval(() => {
       setClock(performance.now())
-      if (catchFlashRef.current && performance.now() - catchFlashRef.current > 1200) {
-        setLastCatch(null)
-        catchFlashRef.current = 0
-      }
       if (performance.now() >= modifiersRef.current.multiplierUntil) {
         if (modifiersRef.current.scoreMultiplier !== 1) {
           modifiersRef.current.scoreMultiplier = 1
@@ -416,6 +414,9 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
   const shieldActive = clock < modifiers.shieldUntil
   const slowActive = clock < modifiers.slowUntil
   const multiplierActive = clock < modifiers.multiplierUntil
+  const multiplierSecondsLeft = multiplierActive
+    ? Math.max(0, Math.ceil((modifiers.multiplierUntil - clock) / 1000))
+    : 0
 
   return (
     <div className="michi-catch">
@@ -438,14 +439,14 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
             {Math.min(score, stage.scoreGoal)}
             <span className="michi-catch__hud-goal"> / {stage.scoreGoal}</span>
           </span>
-          {multiplierActive && (
-            <span className="michi-catch__multiplier-tag">
-              x{modifiers.scoreMultiplier}
-            </span>
-          )}
           {phase === 'playing' && (
             <span className="michi-catch__tips-tag">
               Consejos {collectedTipsCount}/{MIN_COLLECTED_TIPS}
+            </span>
+          )}
+          {multiplierActive && phase === 'playing' && (
+            <span className="michi-catch__multiplier-hud font-readable">
+              x{modifiers.scoreMultiplier} puntos · {multiplierSecondsLeft}s
             </span>
           )}
         </div>
@@ -459,20 +460,9 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
           <div className="michi-catch__shield-badge">!Escudo activo!</div>
         )}
 
-        {lastCatch && phase === 'playing' && !infoMessage && (
-          <div
-            className={`michi-catch__catch-flash michi-catch__catch-flash--${catchTone}`}
-            key={lastCatch}
-          >
-            {lastCatch}
-          </div>
-        )}
-
         {infoMessage && phase === 'playing' && (
           <div className="michi-catch__info-panel" role="status">
-            <p className="michi-catch__info-title">
-              {infoIsQuestion ? 'Pregunta para ti' : 'Sabias que?'}
-            </p>
+            <p className="michi-catch__info-title">Consejo del michi</p>
             <p className="michi-catch__info-text">{infoMessage}</p>
           </div>
         )}
@@ -490,7 +480,7 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
 
         <div
           ref={playerElRef}
-          className={`michi-catch__player${slowActive ? ' michi-catch__player--slow' : ''}${playerCelebrate ? ' michi-catch__player--celebrate' : ''}`}
+          className={`michi-catch__player${slowActive ? ' michi-catch__player--slow' : ''}${playerCelebrate ? ' michi-catch__player--celebrate' : ''}${shieldActive ? ' michi-catch__player--shielded' : ''}`}
           style={{
             left: `${displayX}%`,
             backgroundImage: `url(${MICHI_SPRITE})`,
@@ -624,7 +614,19 @@ export default function MichiCatchGame({ stage, onExit, onStageComplete }: Michi
       )}
 
       {showQuiz && (
-        <PostGameQuiz onClose={() => setShowQuiz(false)} onExit={onExit} />
+        <PostGameQuiz
+          stageId={stage.id}
+          onClose={() => setShowQuiz(false)}
+          onExit={() => {
+            setShowQuiz(false)
+            onExit?.()
+          }}
+          onQuizPassed={(id, score) => {
+            onQuizPassed?.(id, score)
+            setShowQuiz(false)
+            onExit?.()
+          }}
+        />
       )}
     </div>
   )

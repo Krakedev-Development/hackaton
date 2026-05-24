@@ -13,12 +13,12 @@
 
 .tips-review__panel {
   width: 100%;
-  max-width: 720px;
-  height: min(100dvh, 640px);
+  max-width: 760px;
+  height: min(100dvh, 680px);
   max-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding: 10px 12px 12px;
+  padding: 12px 14px 14px;
   background: linear-gradient(180deg, #2a1050 0%, #1a0a2e 100%);
   border: 5px solid #000;
   box-shadow: 8px 8px 0 #000;
@@ -30,30 +30,31 @@
 .tips-review__header {
   flex-shrink: 0;
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .tips-review__title {
-  font-size: 10px;
+  font-size: 11px;
   color: #ffe566;
   text-shadow: 2px 2px 0 #ff3d9a;
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   line-height: 1.7;
 }
 
 .tips-review__subtitle {
-  font-size: 6px;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
   color: #ff9ecd;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.3;
 }
 
 .tips-review__body {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 10px;
   overflow: hidden;
 }
 
@@ -61,7 +62,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 8px 6px;
+  padding: 10px 8px;
   border: 3px solid #000;
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.25);
@@ -70,9 +71,9 @@
 
 .tips-review__col-title {
   flex-shrink: 0;
-  font-size: 6px;
+  font-size: 8px;
   color: #39ff14;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   text-align: center;
   line-height: 1.6;
 }
@@ -83,48 +84,41 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  overflow: hidden;
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  gap: 6px;
 }
 
 .tips-review__tip {
-  display: flex;
-  align-items: flex-start;
-  gap: 5px;
-  padding: 4px 5px;
-  background: rgba(57, 255, 20, 0.08);
-  border: 2px solid rgba(57, 255, 20, 0.25);
-  border-radius: 4px;
-  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(57, 255, 20, 0.1);
+  border: 2px solid rgba(57, 255, 20, 0.35);
+  border-radius: 6px;
+  min-height: 0;
 }
 
 .tips-review__tip-text {
-  font-size: 5px;
-  line-height: 1.55;
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  line-height: 1.25;
   color: #e8ffe8;
   text-align: left;
 }
 
 .tips-review__badge {
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 7px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
   border: 2px solid #000;
-  border-radius: 3px;
-}
-
-.tips-review__badge--q {
-  background: #ffe566;
-  color: #1a0033;
-}
-
-.tips-review__badge--a {
+  border-radius: 4px;
   background: #39ff14;
   color: #003300;
 }
@@ -135,61 +129,53 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  overflow: hidden;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 6px;
 }
 
 .tips-review__milestone {
-  flex: 1;
-  min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 4px 5px;
-  background: rgba(61, 245, 255, 0.08);
-  border: 2px solid rgba(61, 245, 255, 0.3);
-  border-radius: 4px;
-  overflow: hidden;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 10px;
+  background: rgba(61, 245, 255, 0.1);
+  border: 2px solid rgba(61, 245, 255, 0.35);
+  border-radius: 6px;
+  min-height: 0;
 }
 
 .tips-review__milestone-pts {
-  flex-shrink: 0;
-  font-size: 6px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
   color: #3df5ff;
-  margin: 0 0 2px;
+  margin: 0;
 }
 
 .tips-review__milestone-q {
-  flex: 1;
-  font-size: 5px;
+  font-family: 'VT323', monospace;
+  font-size: 14px;
   color: #fff;
-  margin: 0 0 2px;
-  line-height: 1.5;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  margin: 0;
+  line-height: 1.25;
 }
 
 .tips-review__milestone-choice {
-  flex-shrink: 0;
-  font-size: 5px;
+  font-family: 'VT323', monospace;
+  font-size: 15px;
   color: #ffe566;
   margin: 0;
-  line-height: 1.45;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .tips-review__btn {
   flex-shrink: 0;
   width: 100%;
-  margin-top: 8px;
-  padding: 12px 10px;
+  margin-top: 10px;
+  padding: 14px 10px;
   font-family: inherit;
-  font-size: 8px;
+  font-size: 9px;
   line-height: 1.6;
   border: 4px solid #000;
   box-shadow: 4px 4px 0 #000;
@@ -204,7 +190,7 @@
   box-shadow: 2px 2px 0 #000;
 }
 
-@media (max-width: 520px) {
+@media (max-width: 560px) {
   .tips-review__body {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
@@ -212,7 +198,6 @@
 
   .tips-review__panel {
     height: 100dvh;
-    max-height: 100dvh;
     border-radius: 0;
   }
 }

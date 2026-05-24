@@ -31,7 +31,7 @@ export default function TipsReviewPanel({
           <h2 id="tips-review-title" className="tips-review__title">
             Tus consejos
           </h2>
-          <p className="tips-review__subtitle">5 consejos + 3 preguntas del juego</p>
+          <p className="tips-review__subtitle">5 consejos del tema + tus 3 decisiones</p>
         </header>
 
         <div className="tips-review__body">
@@ -42,11 +42,7 @@ export default function TipsReviewPanel({
             <ol className="tips-review__tips-list">
               {displayTips.map((tip, index) => (
                 <li key={`${tip.text}-${index}`} className="tips-review__tip">
-                  <span
-                    className={`tips-review__badge tips-review__badge--${tip.kind === 'question' ? 'q' : 'a'}`}
-                  >
-                    {tip.kind === 'question' ? '?' : '!'}
-                  </span>
+                  <span className="tips-review__badge tips-review__badge--a">!</span>
                   <span className="tips-review__tip-text">{tip.text}</span>
                 </li>
               ))}
